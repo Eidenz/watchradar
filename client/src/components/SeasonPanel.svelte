@@ -16,6 +16,7 @@
   let { view, season, onview }: Props = $props();
   const mediaId = $derived(view.media.id!);
   let episodes = $state<EpisodeState[] | null>(null);
+  let loadError = $state('');
   let part = $state(0); // 0 = all parts
   let expanded = $state<number | null>(null);
   let menuFor = $state<number | null>(null);
@@ -26,11 +27,14 @@
 
   async function load() {
     const my = ++seq;
+    loadError = '';
     try {
-      const r = await api.media.season(mediaId, season.season_number);
+      const r = await api.titles.season(view.media.media_type, view.media.tmdb_id, season.season_number);
       if (my === seq) episodes = r.episodes;
     } catch (e: any) {
-      toast.error(e.message);
+      if (my !== seq) return;
+      episodes = [];
+      loadError = e.message;
     }
   }
   $effect(() => {
@@ -156,7 +160,7 @@
           </div>
         {/if}
       {/each}
-      {#if !shown.length}<p class="faint">No episodes listed.</p>{/if}
+      {#if !shown.length}<p class="faint">{loadError || 'No episodes listed.'}</p>{/if}
     </div>
   {/if}
 </div>

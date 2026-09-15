@@ -395,6 +395,7 @@ export const api = {
   },
   titles: {
     get: (type: MediaType, tmdbId: number) => call<TitleView>(`/api/titles/${type}/${tmdbId}`),
+    season: (type: MediaType, tmdbId: number, n: number) => call<{ episodes: EpisodeState[] }>(`/api/titles/${type}/${tmdbId}/seasons/${n}`),
     comments: (type: MediaType, tmdbId: number) => call<{ comments: Comment[] }>(`/api/titles/${type}/${tmdbId}/comments`),
     track: (type: MediaType, tmdbId: number, body: { status?: Status; list_id?: number; watched_at?: string } = {}) =>
       call<TitleView>(`/api/titles/${type}/${tmdbId}/track`, { method: 'POST', json: body }),

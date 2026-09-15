@@ -31,6 +31,16 @@ export function titleRoutes(db) {
     })
   );
 
+  r.get('/titles/:type/:tmdbId/seasons/:n', (req, res) => {
+    const type = typeParam(req.params.type);
+    const tmdbId = int(req.params.tmdbId, 'tmdbId', { min: 1 });
+    const n = int(req.params.n, 'season', { min: 0 });
+    const media = db.prepare('SELECT id, media_type FROM media WHERE media_type = ? AND tmdb_id = ?').get(type, tmdbId);
+    if (!media) throw err(404, 'Unknown title.');
+    const t = req.user ? P.getTracking(db, req.user.id, media.id) : null;
+    res.json({ episodes: P.episodesWithState(db, req.user?.id ?? null, media, t, n) });
+  });
+
   r.get('/titles/:type/:tmdbId/comments', (req, res) => {
     const type = typeParam(req.params.type);
     const tmdbId = int(req.params.tmdbId, 'tmdbId', { min: 1 });

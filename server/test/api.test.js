@@ -261,6 +261,14 @@ test('legacy redirects + oembed', async (t) => {
   assert.equal(red2.headers.get('location'), '/title/tv/100');
   const oe = await (await fetch(`${s.base}/api/oembed?url=${encodeURIComponent(s.base + '/title/tv/100')}`)).json();
   assert.equal(oe.title, 'Radar Show (2020)');
+  // Guests can read a cached title's episode list (without any watched state).
+  const guest = client(s.base);
+  const eps = await guest.get('/api/titles/tv/100/seasons/1');
+  assert.equal(eps.status, 200);
+  assert.equal(eps.data.episodes.length, 2);
+  assert.equal(eps.data.episodes[0].watched, false);
+  assert.equal(eps.data.episodes[0].play_count, 0);
+  assert.equal((await guest.get('/api/titles/tv/100')).data.seasons.length, 1);
 });
 
 test('import: MAL xml parses and applies statuses, episodes and rewatches', async (t) => {
