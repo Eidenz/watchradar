@@ -1,7 +1,7 @@
 services:
   watchradar:
     build: .
-    image: git.eidenz.moe/eidenz/watchradar:latest
+    image: git.eidenz.moe/eidenz/watchradar-v2:latest
     container_name: watchradar
     restart: unless-stopped
     ports:
