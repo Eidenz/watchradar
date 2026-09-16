@@ -50,8 +50,8 @@
     <p class="foot">Movies &amp; series data by TMDB · self-hosted, yours.</p>
   </aside>
 
+  <button class="icon-btn theme" onclick={() => theme.toggle()} aria-label="Toggle theme">{#if theme.dark}<Sun size={18} />{:else}<Moon size={18} />{/if}</button>
   <div class="form-wrap"><main class="form-side">
-    <button class="icon-btn theme" onclick={() => theme.toggle()} aria-label="Toggle theme">{#if theme.dark}<Sun size={18} />{:else}<Moon size={18} />{/if}</button>
     <div class="panel card animate-rise">
       <div class="mobile-brand"><Logo size={40} /><span>Watch<em>Radar</em></span></div>
       <h1>{title}</h1>
@@ -63,13 +63,21 @@
 </div>
 
 <style>
-  .auth { min-height: 100dvh; display: grid; grid-template-columns: 1fr; }
+  .auth { position: relative; min-height: 100dvh; display: grid; grid-template-columns: 1fr; }
   @media (min-width: 900px) { .auth { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); } }
 
   /* ---- showcase ------------------------------------------------------------------- */
-  .show { display: none; position: relative; overflow: hidden; padding: 2rem 2.5rem; color: #eef7f6;
+  .show { position: relative; overflow: hidden; padding: 2rem 2.5rem; color: #eef7f6;
     background: radial-gradient(120% 90% at 15% 0%, #167a70 0%, #0f4a45 38%, #0b2b2a 72%, #0a1c1c 100%); }
   @media (min-width: 900px) { .show { display: flex; flex-direction: column; justify-content: space-between; } }
+  /* Narrow screens: the showcase becomes a compact hero the form card overlaps. */
+  @media (max-width: 899px) {
+    .show { padding: 1.25rem 1.25rem 4.5rem; min-height: 16rem; }
+    .show .pitch h2 { font-size: 1.5rem; margin: 1.25rem 0 0; max-width: 16rem; }
+    .show .pitch ul, .show .foot { display: none; }
+    .radar { right: -30%; top: 58%; width: 80vw; max-width: 26rem; opacity: 0.8; }
+    .tag { display: none; }
+  }
   .brand { display: inline-flex; align-items: center; gap: 0.625rem; font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em; color: #fff; }
   .brand em { font-style: normal; color: #2dd4bf; }
 
@@ -104,6 +112,13 @@
   /* ---- form side ------------------------------------------------------------------ */
   .form-side { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1rem;
     background: rgb(var(--c-page)); }
+  @media (max-width: 899px) {
+    .form-side { justify-content: flex-start; padding: 0 1rem 2.5rem; background: transparent; }
+    .form-side::before { display: none; }
+    .panel { margin-top: -3rem; box-shadow: var(--shadow-lg); }
+    .theme { top: 0.875rem; right: 0.875rem; color: #eef7f6; }
+    .theme:hover { background: rgb(255 255 255 / 0.12); color: #fff; }
+  }
   .form-wrap { display: contents; }
   @media (min-width: 900px) {
     .form-side { min-height: 100dvh; background: rgb(var(--c-surface)); border-left: 1px solid rgb(var(--c-border)); }
@@ -119,11 +134,9 @@
   :global(html.dark) .form-side .panel { background: rgb(var(--c-page)); }
   .form-side::before { content: ''; position: absolute; inset: 0; pointer-events: none;
     background: radial-gradient(60% 50% at 80% 100%, rgb(var(--c-brand) / 0.08), transparent 70%); }
-  .theme { position: absolute; top: 1rem; right: 1rem; }
+  .theme { position: absolute; top: 1rem; right: 1rem; z-index: 3; }
   .panel { width: 100%; max-width: 25rem; padding: 2rem; }
-  .mobile-brand { display: flex; align-items: center; gap: 0.625rem; font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
-  .mobile-brand em { font-style: normal; color: rgb(var(--c-brand)); }
-  @media (min-width: 900px) { .mobile-brand { display: none; } }
+  .mobile-brand { display: none; }
   h1 { font-size: 1.5rem; letter-spacing: -0.02em; }
   .sub { margin: 0.35rem 0 1.5rem; }
   .under { margin-top: 1.25rem; font-size: 0.8125rem; color: rgb(var(--c-text-2)); text-align: center; }
