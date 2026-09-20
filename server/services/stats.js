@@ -76,10 +76,10 @@ export function userStats(db, userId, { includePrivate = true } = {}) {
   for (const r of db.prepare(`SELECT CAST(strftime('%w', w.watched_at) AS INTEGER) AS d, COUNT(*) AS c FROM watch_events w JOIN user_media um ON um.media_id = w.media_id AND um.user_id = w.user_id WHERE w.user_id = ? ${priv} GROUP BY d`).all(userId)) dow[r.d] = r.c;
 
   const mostRewatched = db
-    .prepare(`SELECT m.id, m.title, m.original_title, m.original_language, m.alternative_titles, m.poster_path, m.media_type, um.watch_count FROM user_media um JOIN media m ON m.id = um.media_id WHERE um.user_id = ? AND um.watch_count >= 2 ${priv} ORDER BY um.watch_count DESC, m.title LIMIT 6`)
+    .prepare(`SELECT m.id, m.tmdb_id, m.title, m.original_title, m.original_language, m.alternative_titles, m.poster_path, m.media_type, m.release_date, um.watch_count FROM user_media um JOIN media m ON m.id = um.media_id WHERE um.user_id = ? AND um.watch_count >= 2 ${priv} ORDER BY um.watch_count DESC, m.title LIMIT 6`)
     .all(userId);
   const topRated = db
-    .prepare(`SELECT m.id, m.title, m.original_title, m.original_language, m.alternative_titles, m.poster_path, m.media_type, um.rating FROM user_media um JOIN media m ON m.id = um.media_id WHERE um.user_id = ? AND um.rating IS NOT NULL ${priv} ORDER BY um.rating DESC, um.updated_at DESC LIMIT 6`)
+    .prepare(`SELECT m.id, m.tmdb_id, m.title, m.original_title, m.original_language, m.alternative_titles, m.poster_path, m.media_type, m.release_date, um.rating FROM user_media um JOIN media m ON m.id = um.media_id WHERE um.user_id = ? AND um.rating IS NOT NULL ${priv} ORDER BY um.rating DESC, um.updated_at DESC LIMIT 6`)
     .all(userId);
 
   const totalMinutes = tvMinutes.mins + movieMinutes.mins;

@@ -152,6 +152,8 @@ test('track a show through the API, mark episodes, home + library reflect it', a
   assert.equal(r.data.total, 0);
 
   r = await c.get('/api/stats');
+  assert.equal(r.data.top_rated[0].tmdb_id, 100, 'stats cards carry what the client needs to link to the title');
+  assert.equal(r.data.top_rated[0].media_type, 'tv');
   assert.equal(r.data.counts.completed_tv, 1);
   assert.equal(r.data.minutes.tv, 48);
   assert.equal(r.data.episodes_watched, 2);
