@@ -1,15 +1,12 @@
 services:
   watchradar:
     build: .
-    image: git.eidenz.moe/eidenz/watchradar-v2:latest
     container_name: watchradar
     restart: unless-stopped
     ports:
       - "${PORT:-3000}:3000"
     volumes:
       - ${DATA_DIR:-./data}:/data
-      # Uncomment to import the old WatchRadar (v1) database on first boot, then set LEGACY_DB below.
-      # - ./legacy/watchradar.sqlite3:/legacy/watchradar.sqlite3:ro
     environment:
       - TZ=${TZ:-UTC}
       - TMDB_API_KEY=${TMDB_API_KEY:?set TMDB_API_KEY in .env}
