@@ -1,5 +1,7 @@
 # 📡 WatchRadar
 
+![WatchRadar Showcase](screenshot.png)
+
 Track the movies and series you watch, and keep an eye on what's next.
 
 WatchRadar is a small self-hosted tracker built around one idea: **your viewing history should
@@ -56,30 +58,6 @@ npm run dev               # API on :3000, Vite dev server on :5181
 
 `npm run build && npm start` runs the production build. `npm test` runs the server test suite,
 `npm run check` type-checks the client.
-
-## Migrating from WatchRadar v1
-
-Everything is imported: accounts (passwords included), library, ratings (converted to the
-10-point scale), episode progress and rewatches, season splits (now cuts), lists, friends,
-activity and reviews. Ids are preserved so old `/media/:id` and `/profile/:name` links redirect
-to their new homes.
-
-Either point the server at the old database on first boot:
-
-```bash
-# docker-compose: mount the file and set LEGACY_DB=/legacy/watchradar.sqlite3 in .env
-# local:
-LEGACY_DB=/path/to/old/watchradar.sqlite3 npm start
-```
-
-…or run the migration explicitly into the configured data dir:
-
-```bash
-npm run migrate:legacy -- /path/to/old/watchradar.sqlite3
-```
-
-The import only runs when the new database is empty. Episode lists are re-synced from TMDB by
-the scheduler shortly after (silently — no "new episode" notifications for the baseline sync).
 
 ## Configuration
 
